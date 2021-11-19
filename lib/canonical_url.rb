@@ -15,7 +15,9 @@ module CanonicalURL
   module Helpers
     ALLOWED_CANONICAL_PARAMS = %w(page)
     def canonical_link_tag(url = nil)
-      tag('link', rel: 'canonical', href: url || @canonical_url || default_canonical)
+      canonical = url || @canonical_url || default_canonical
+      response.headers['X-Robots-Tag'] = 'noindex' unless canonical == request.url
+      tag('link', rel: 'canonical', href: canonical)
     end
 
     def default_canonical
